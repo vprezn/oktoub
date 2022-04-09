@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-# from flask_cors import CORS
+from flask_cors import CORS
 
 from keras.models import load_model
 import numpy as np
@@ -7,20 +7,20 @@ import cv2
 # import json
 #Initialize the flask App
 app = Flask(__name__)
-# cors = CORS(app, resources={r"/api/": {"origins": ""}})
+cors = CORS(app, resources={r"/api/": {"origins": ""}})
 
 
 model = load_model('keras_model.h5')
 
 
 # CORS Headers
-# @app.after_request
-# def after_request(response):
-#     header = response.headers
-#     header['Access-Control-Allow-Origin'] = '*'
-#     header['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
-#     header['Access-Control-Allow-Methods'] = 'OPTIONS, HEAD, GET, POST, DELETE, PUT'
-#     return response
+@app.after_request
+def after_request(response):
+    header = response.headers
+    header['Access-Control-Allow-Origin'] = '*'
+    header['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+    header['Access-Control-Allow-Methods'] = 'OPTIONS, HEAD, GET, POST, DELETE, PUT'
+    return response
 
 
 
