@@ -1,10 +1,10 @@
-from flask import Flask, request, jsonify, render_template
-from flask_cors import CORS
+from flask import Flask, request, jsonify
+# from flask_cors import CORS
 
 from keras.models import load_model
 import numpy as np
 import cv2
-
+import json
 #Initialize the flask App
 app = Flask(__name__)
 # cors = CORS(app, resources={r"/api/": {"origins": ""}})
@@ -29,16 +29,31 @@ def home():
     return "Ahmad"
 
 
-@app.route('/predict')
+@app.route('/predict',methods=['POST'])
 def predict():
+
+    r = request.get_json()
     # Create the array of the right shape to feed into the keras model
     # The 'length' or number of images you can put into the array is
     # determined by the first position in the shape tuple, in this case 1.
     data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
 
+    with open('data.json', 'w') as f:
+        json.dump(r, f)
     # preprocessing
-    image = cv2.imread('2 - 02 - تمساح.png')
-    res = cv2.resize(image, dsize=(224, 224))
+
+    r = np.asarray(r, dtype = np.uint8)
+    img = cv2.imdecode(r, cv2.IMREAD_COLOR)
+    # res = cv2.resize(img, dsize=(224, 224))
+
+    
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    gray = 255*(gray < 128).astype(np.uint8) # To invert the text to white
+    coords = cv2.findNonZero(gray) # Find all non-zero points (text)
+    x, y, w, h = cv2.boundingRect(coords) # Find minimum spanning bounding box
+    rect = img[y:y+h, x:x+w] # Crop the image - note we do this on the original image
+    constant= cv2.copyMakeBorder(rect,20,20,20,20,cv2.BORDER_CONSTANT,value=[255,255,255])
+    res = cv2.resize(constant, dsize=(224, 224))
 
     #turn the image into a numpy array
     image_array = np.asarray(res)
@@ -51,5 +66,10 @@ def predict():
 
     prediction = model.predict(data).argmax()
     
-    return prediction
+    return jsonify({
+        "success":True,
+        "pred":str(prediction)
+    })
 
+# def preprocessing(data):
+    
