@@ -5,7 +5,7 @@ from keras.models import load_model
 import numpy as np
 from cv2 import cv2
 import os
-# import json
+import json
 #Initialize the flask App
 app = Flask(__name__)
 # cors = CORS(app, resources={r"/api/": {"origins": ""}})
@@ -39,6 +39,9 @@ def predict():
     # The 'length' or number of images you can put into the array is
     # determined by the first position in the shape tuple, in this case 1.
     data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
+
+    with open('data.json', 'w') as f:
+        json.dump(imgBytes, f)
 
     # preprocessing
     res = preprocessing(imgBytes)
