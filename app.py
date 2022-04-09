@@ -3,7 +3,7 @@ from flask import Flask, request, jsonify
 
 from keras.models import load_model
 import numpy as np
-import cv2
+from cv2 import cv2
 import os
 # import json
 #Initialize the flask App
