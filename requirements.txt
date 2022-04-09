@@ -4,4 +4,4 @@ Flask==2.0.1
 numpy==1.22.3
 opencv-python==4.5.5.64
 keras==2.8.0
-tflite==2.4.0 
+tensorflow
