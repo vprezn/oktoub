@@ -1,6 +1,6 @@
-gunicorn
-Flask
-Flask-Cors
-numpy
-opencv-python
-keras
+gunicorn==20.1.0
+Flask==2.1.1
+# Flask-Cors
+numpy==10.0.1
+opencv-python==4.5.5.64
+keras==2.8.0
