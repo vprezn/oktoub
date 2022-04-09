@@ -10,7 +10,7 @@ app = Flask(__name__)
 cors = CORS(app, resources={r"/api/": {"origins": ""}})
 
 
-model = load_model('keras_model.h5')
+
 
 
 # CORS Headers
@@ -31,7 +31,7 @@ def home():
 
 @app.route('/predict',methods=['POST'])
 def predict():
-
+    model = load_model('keras_model.h5')
     imgBytes = request.get_json()
 
     # Create the array of the right shape to feed into the keras model
