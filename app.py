@@ -71,3 +71,7 @@ def preprocessing(data):
 
     constant= cv2.copyMakeBorder(rect,20,20,20,20,cv2.BORDER_CONSTANT,value=[255,255,255])
     return cv2.resize(constant, dsize=(224, 224))
+
+
+if __name__ == "__main__":
+    app.run()
