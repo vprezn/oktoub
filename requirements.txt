@@ -1,6 +1,5 @@
-Flask
-Flask-Cors
 gunicorn
+Flask
 numpy
 opencv-python
 keras

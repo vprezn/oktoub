@@ -4,7 +4,7 @@ from flask import Flask, request, jsonify
 from keras.models import load_model
 import numpy as np
 import cv2
-import json
+# import json
 #Initialize the flask App
 app = Flask(__name__)
 # cors = CORS(app, resources={r"/api/": {"origins": ""}})
