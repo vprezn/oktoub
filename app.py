@@ -26,34 +26,22 @@ model = load_model('keras_model.h5')
 
 @app.route('/')
 def home():
-    return "Ahmad"
+    return "Works"
 
 
 @app.route('/predict',methods=['POST'])
 def predict():
 
-    r = request.get_json()
+    imgBytes = request.get_json()
+
     # Create the array of the right shape to feed into the keras model
     # The 'length' or number of images you can put into the array is
     # determined by the first position in the shape tuple, in this case 1.
     data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
 
-    with open('data.json', 'w') as f:
-        json.dump(r, f)
     # preprocessing
-
-    r = np.asarray(r, dtype = np.uint8)
-    img = cv2.imdecode(r, cv2.IMREAD_COLOR)
-    # res = cv2.resize(img, dsize=(224, 224))
-
+    res = preprocessing(imgBytes)
     
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    gray = 255*(gray < 128).astype(np.uint8) # To invert the text to white
-    coords = cv2.findNonZero(gray) # Find all non-zero points (text)
-    x, y, w, h = cv2.boundingRect(coords) # Find minimum spanning bounding box
-    rect = img[y:y+h, x:x+w] # Crop the image - note we do this on the original image
-    constant= cv2.copyMakeBorder(rect,20,20,20,20,cv2.BORDER_CONSTANT,value=[255,255,255])
-    res = cv2.resize(constant, dsize=(224, 224))
 
     #turn the image into a numpy array
     image_array = np.asarray(res)
@@ -71,5 +59,15 @@ def predict():
         "pred":str(prediction)
     })
 
-# def preprocessing(data):
+def preprocessing(data):
+    data = np.asarray(data, dtype = np.uint8)
+    img = cv2.imdecode(data, cv2.IMREAD_COLOR)
     
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    gray = 255*(gray < 128).astype(np.uint8) # To invert the text to white
+    coords = cv2.findNonZero(gray) # Find all non-zero points (text)
+    x, y, w, h = cv2.boundingRect(coords) # Find minimum spanning bounding box
+    rect = img[y:y+h, x:x+w] # Crop the image - note we do this on the original image
+
+    constant= cv2.copyMakeBorder(rect,20,20,20,20,cv2.BORDER_CONSTANT,value=[255,255,255])
+    return cv2.resize(constant, dsize=(224, 224))
